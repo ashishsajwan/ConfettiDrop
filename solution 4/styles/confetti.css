@@ -10,7 +10,7 @@ body {
 .confetti .text {
   text-align: center;
   position: relative;
-  top: 50%;
+  top: 38%;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
   font-size: 32px;
