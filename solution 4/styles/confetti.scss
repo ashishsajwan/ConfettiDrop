@@ -1,0 +1,79 @@
+$totalConfetti: 300;
+$duration: 15000;
+
+$colors: (
+  1: #ffd300,
+  2: #17d3ff,
+  3: #ff4e91
+);
+
+@function getColor($index) {
+  @return map-get($colors, $index);
+}
+
+@function randomNum($min, $max) {
+  $rand: random();
+  $randomNum: $min + floor($rand * (($max - $min) + 1));
+
+  @return $randomNum;
+}
+
+body {
+  background: #faebd7;
+}
+.confetti {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  .text {
+    text-align: center;
+    position: relative;
+    top: 50%;
+    // vertically center align adjustment
+    transform: translateY(-50%);
+    font-size: 32px;
+    font-weight: bold;
+    letter-spacing: 32px;
+  }
+}
+
+.confetti-piece {
+  position: relative;
+  display: inline-block;
+  // top: -10%; instead using transform: translate3d
+  // transform: translate3d(0px, -10vh, 0px);
+  opacity: 0;
+  @for $i from 1 through $totalConfetti {
+    &:nth-child(#{$i}) {
+      width: #{randomNum(1, 15)}px;
+      height: #{randomNum(1, 15)}px;
+      background: getColor(randomNum(1, 3));
+      // left: ($i / ($totalConfetti / 100)) * 1%;  rotate(#{randomNum(-80, 80)}deg)
+      transform: translate3d((($i / ($totalConfetti / 100)) * 1vw), -10vh, 0) rotate(#{randomNum(-80, 80)}deg);
+      // not using transition prop, because loop is not possible with transition 
+      // transition: transform #{$duration / 1000}s ease-out #{randomNum(0, (($duration / 1000) * 0.5))}s;
+      animation: confettiDrop $duration * 1ms infinite ease-out;
+      animation-delay: #{randomNum(0, $duration * 0.5)}ms;
+      animation-duration: #{randomNum($duration * 0.5, $duration * 1.5)}ms;
+    }
+  }
+}
+
+@keyframes confettiDrop {
+  15% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  to {
+    // transform: translateY(100vh) rotate(360deg);
+    // Problem: https://stackoverflow.com/a/37408832
+    // ideally translateX should remain unchanged (as set in line 54) and only Y should change
+    // but its not possible
+    transform: translateX(50vw) translateY(100vh) rotate(360deg);
+  }
+}
